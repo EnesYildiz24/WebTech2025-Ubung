@@ -1,6 +1,8 @@
 # WebTech2025
 
+## TechStack
 
+Frontend: React
 
 ## Getting started
 
