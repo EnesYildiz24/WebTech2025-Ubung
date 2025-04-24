@@ -34,7 +34,7 @@ Wir orientieren uns an Best Practices für Git-Repositories nach ["Best Practice
 ### 3. Kommunikationskanal
 
 - **Werkzeug:** Microsoft Teams
-- **Kanal:** Privater Gruppen-Kanal **Projekt-Team** angelegt, in dem alle Team-Mitglieder (Max, Maria, Ali, …) erreichbar sind.
+- **Kanal:** Privater Gruppen-Kanal **Projekt-Team** angelegt, in dem alle Team-Mitglieder erreichbar sind.
 - **Rationale:** Echtzeit-Kommunikation, Dateiaustausch und Integration mit Planner/Boards in Teams.
 
 ---
