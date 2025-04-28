@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
+const API_KEY = import.meta.env.API_KEY;
 
 function App() {
   const [query, setQuery] = useState('');
   const [games, setGames] = useState([]);
 
   const searchGames = async () => {
-    if (!query.trim()) return; // Kein leeres Suchfeld absenden
+    if (!query.trim()) return;
 
     try {
-      const response = await fetch(`https://api.rawg.io/api/games?key=DEIN_API_KEY&search=${query}`);
+      const response = await fetch(`https://api.rawg.io/api/games?key=${API_KEY}&search=${query}`);
       const data = await response.json();
       setGames(data.results);
     } catch (error) {
