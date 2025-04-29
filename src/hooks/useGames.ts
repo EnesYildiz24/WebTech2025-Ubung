@@ -15,8 +15,10 @@ export function useGames(search = "") {
     queryFn: ({ pageParam }) =>
       rawgFetch("games", {
         page: pageParam,
-        page_size: 20,
+        page_size: 50,
         search,
+        search_precise: true, 
+        search_exact: true,
         ordering: "-rating",
     }),
     getNextPageParam: (lastPage, _pages, lastPageParam) =>
