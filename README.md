@@ -11,7 +11,7 @@ Kleine Demo-App mit Vite + React (oder Vue/Angular), die die RAWG-API verwendet,
 
 ## Demo
 
-![Screenshot der App](./screenshot.png)
+![Screenshot der App](public/screenshot.png)
 
 > Hinweis: Screenshot liegt im Projekt unter `/public/screenshot.png`.
 
