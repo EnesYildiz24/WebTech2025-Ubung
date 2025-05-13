@@ -85,3 +85,4 @@ export default function GameList({ search = "" }: { search: string }) {
     </>
   );
 }
+
