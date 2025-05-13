@@ -3,6 +3,7 @@ image: node:18
 stages:
   - install
   - build
+  - test
 
 cache:
   paths:
@@ -23,3 +24,11 @@ build_app:
   artifacts:
     paths:
       - dist/
+
+test_app:
+  stage: test
+  script:
+    - npm run test -- --coverage
+  artifacts:
+    paths:
+      - coverage/
