@@ -32,3 +32,13 @@ test_app:
   artifacts:
     paths:
       - coverage/
+
+
+deploy_to_vercel:
+  stage: deploy
+  image: node:18
+  only:
+    - main  
+  script:
+    - npm install -g vercel
+    - vercel --token=$VERCEL_TOKEN --prod --yes
