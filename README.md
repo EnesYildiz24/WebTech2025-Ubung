@@ -55,3 +55,9 @@ Der Beginn des Build-Jobs: `npm run build` und Vite startet den Produktions-Buil
 Abschluss des Build-Jobs: Artefakte (`dist/`) werden hochgeladen und der Job endet mit „Job succeeded“.
 
 ![Build Job Log Part 2](docs/screenshots/build_app2.png)
+
+---
+
+## Deployment auf Vercel
+
+Live-Demo: https://webtech2025.vercel.app/
