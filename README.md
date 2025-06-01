@@ -61,3 +61,12 @@ Abschluss des Build-Jobs: Artefakte (`dist/`) werden hochgeladen und der Job end
 ## Deployment auf Vercel
 
 Live-Demo: https://webtech2025.vercel.app/
+
+---
+
+## Monitoring
+
+Diese Applikation verwendet [Sentry.io](https://sentry.io) zur Fehlerüberwachung.  
+Alle Typescript-Fehler und Crashes werden automatisch gemeldet.  
+Beispiel-Fehler: Button auf der Startseite erzeugt absichtlich einen Fehler zur Demonstration.
+
