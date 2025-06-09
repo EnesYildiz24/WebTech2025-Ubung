@@ -42,20 +42,21 @@ test_app:
 
 sentry_release:
   stage: release
-  needs: ["build_app", "install_dependencies"]
+  needs: ["build_app"]
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
   script: |
-    # 1) neues Release anlegen
+    # 1) Release anlegen
     npx --yes @sentry/cli releases new "$CI_COMMIT_SHA"
-    # 2) Sourcemaps hochladen
+    # 2) Sourcemaps
     npx --yes @sentry/cli releases files "$CI_COMMIT_SHA" upload-sourcemaps dist --rewrite
     # 3) Release finalisieren
     npx --yes @sentry/cli releases finalize "$CI_COMMIT_SHA"
   variables:
+    SENTRY_LOG_LEVEL: debug
     SENTRY_AUTH_TOKEN: $SENTRY_AUTH_TOKEN
-    SENTRY_ORG:           my-org 
-    SENTRY_PROJECT:       javascript-react 
+    SENTRY_ORG:        $SENTRY_ORG
+    SENTRY_PROJECT:    $SENTRY_PROJECT
 
 deploy_to_vercel:
   stage: deploy
