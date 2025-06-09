@@ -4,11 +4,7 @@ stages:
   - install
   - build
   - test
-  - release     # Sentry-Release upload
   - deploy
-
-variables:
-  NODE_ENV: production
 
 cache:
   paths:
@@ -24,8 +20,6 @@ install_dependencies:
 
 build_app:
   stage: build
-  needs: ["install_dependencies"]
-  dependencies: ["install_dependencies"]
   script:
     - npm run build
   artifacts:
@@ -34,7 +28,6 @@ build_app:
 
 test_app:
   stage: test
-  needs: ["install_dependencies"]
   script:
     - npm run test -- --coverage
   artifacts:
@@ -55,11 +48,12 @@ sentry_release:
     SENTRY_ORG: my-org
     SENTRY_PROJECT: javascript-react
 
-deploy_vercel:
+
+deploy_to_vercel:
   stage: deploy
-  needs: ["test_app", "sentry_release"] 
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "main"'
-  script: |
-    npm i -g vercel@latest
-    vercel deploy --prod --token $VERCEL_TOKEN --yes
+  image: node:18
+  only:
+    - main  
+  script:
+    - npm install -g vercel
+    - vercel --token=$VERCEL_TOKEN --prod --yes
