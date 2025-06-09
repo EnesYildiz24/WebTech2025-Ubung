@@ -4,6 +4,7 @@ stages:
   - install
   - build
   - test
+  - release 
   - deploy
 
 cache:
@@ -13,21 +14,25 @@ cache:
 install_dependencies:
   stage: install
   script:
-    - npm ci
+    - npm ci --include=dev
   artifacts:
     paths:
       - node_modules/
 
+
 build_app:
   stage: build
+  needs: ["install_dependencies"]
   script:
     - npm run build
   artifacts:
     paths:
       - dist/
 
+
 test_app:
   stage: test
+  needs: ["install_dependencies"]
   script:
     - npm run test -- --coverage
   artifacts:
@@ -35,11 +40,28 @@ test_app:
       - coverage/
 
 
+sentry_release:
+  stage: release
+  needs: ["build_app", "install_dependencies"]
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+  script: |
+    # 1) neues Release anlegen
+    npx --yes @sentry/cli releases new "$CI_COMMIT_SHA"
+    # 2) Sourcemaps hochladen
+    npx --yes @sentry/cli releases files "$CI_COMMIT_SHA" upload-sourcemaps dist --rewrite
+    # 3) Release finalisieren
+    npx --yes @sentry/cli releases finalize "$CI_COMMIT_SHA"
+  variables:
+    SENTRY_AUTH_TOKEN: $SENTRY_AUTH_TOKEN
+    SENTRY_ORG:           my-org 
+    SENTRY_PROJECT:       javascript-react 
+
 deploy_to_vercel:
   stage: deploy
-  image: node:18
-  only:
-    - main  
-  script:
-    - npm install -g vercel
-    - vercel --token=$VERCEL_TOKEN --prod --yes
+  needs: ["test_app", "sentry_release"]
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+  script: |
+    npm i -g vercel@latest
+    vercel --prod --token "$VERCEL_TOKEN" --yes

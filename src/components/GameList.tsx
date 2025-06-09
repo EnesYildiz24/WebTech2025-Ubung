@@ -1,17 +1,21 @@
+// src/components/GameList.tsx
 import { useMemo } from "react";
 import { useGames } from "../hooks/useGames";
 import { Game, GamesResponse } from "../types/rawg";
 
 export default function GameList({ search = "" }: { search: string }) {
+  // 1) immer der erste Hook
   const {
     data,
     error,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useGames(); 
+  } = useGames();
 
+  /** ---------- alle weiteren Hooks kommen direkt danach ---------- */
   const pages = data?.pages ?? [];
+
   const allGames = useMemo(
     () => pages.flatMap((p: GamesResponse) => p.results),
     [pages]
@@ -37,8 +41,9 @@ export default function GameList({ search = "" }: { search: string }) {
       : byRating;
   }, [allGames, tokens]);
 
-  if (error) return <p>Fehler: {(error as Error).message}</p>;
-  if (!data) return <p>Lade …</p>;
+  /** ---------- erst jetzt konditionell rendern ---------- */
+  if (!data && !error) return <p>Lade …</p>;
+  if (error)        return <p>Fehler: {(error as Error).message}</p>;
 
   return (
     <>
@@ -71,13 +76,6 @@ export default function GameList({ search = "" }: { search: string }) {
         <button
           onClick={() => fetchNextPage()}
           disabled={isFetchingNextPage}
-          style={{
-            marginTop: 16,
-            padding: "6px 12px",
-            borderRadius: 8,
-            background: "#4f46e5",
-            color: "#fff",
-          }}
         >
           {isFetchingNextPage ? "Lade …" : "Mehr laden"}
         </button>
@@ -85,4 +83,3 @@ export default function GameList({ search = "" }: { search: string }) {
     </>
   );
 }
-

@@ -4,7 +4,6 @@ import GameList from "./components/GameList";
 
 export default function App() {
   const [query, setQuery] = useState("");
-
   return (
     <main style={{ maxWidth: 960, margin: "0 auto", padding: 24 }}>
       <h1 style={{ fontSize: 24, marginBottom: 16 }}>RAWG – Spielsuche</h1>
