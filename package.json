@@ -18,6 +18,8 @@
     "ts-coverage": "typescript-coverage-report"
   },
   "dependencies": {
+    "@sentry/react": "^9.27.0",
+    "@sentry/tracing": "^7.120.3",
     "@tanstack/react-query": "^5.74.11"
   }
 }

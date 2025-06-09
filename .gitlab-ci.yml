@@ -4,42 +4,49 @@ stages:
   - install
   - build
   - test
+  - release     # Sentry-Release upload
   - deploy
+
+variables:
+  NODE_ENV: production
 
 cache:
   paths:
     - node_modules/
 
-install_dependencies:
+install:
   stage: install
-  script:
-    - npm ci
-  artifacts:
-    paths:
-      - node_modules/
+  script: npm ci
 
-build_app:
+build:
   stage: build
-  script:
-    - npm run build
+  script: npm run build
   artifacts:
-    paths:
-      - dist/
+    paths: [dist]
 
-test_app:
+test:
   stage: test
-  script:
-    - npm run test -- --coverage
-  artifacts:
-    paths:
-      - coverage/
+  script: npm run test -- --coverage
 
+sentry_release:
+  stage: release
+  needs: ["build"]
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+  script: |
+    npm exec --package=@sentry/cli -- sentry-cli releases new "$CI_COMMIT_SHA"
+    npm exec --package=@sentry/cli -- sentry-cli releases files "$CI_COMMIT_SHA" upload-sourcemaps dist --rewrite
+    npm exec --package=@sentry/cli -- sentry-cli releases finalize "$CI_COMMIT_SHA"
+  variables:
+    SENTRY_AUTH_TOKEN: $SENTRY_AUTH_TOKEN   # kommt aus GitLab-UI
+    SENTRY_ORG: my-org
+    SENTRY_PROJECT: javascript-react
 
-deploy_to_vercel:
+deploy_vercel:
   stage: deploy
-  image: node:18
-  only:
-    - main  
-  script:
-    - npm install -g vercel
-    - vercel --token=$VERCEL_TOKEN --prod --yes
+  needs: ["test", "sentry_release"]
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+  script: |
+    npm i -g vercel@latest
+    vercel deploy --prod --token $VERCEL_TOKEN --yes
